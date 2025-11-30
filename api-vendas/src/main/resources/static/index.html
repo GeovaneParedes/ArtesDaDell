@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artes da Dell | Ateliê</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'rose-dell': '#e11d48', 'pink-soft': '#fff1f2', 'gold-accent': '#d4af37' },
+                    fontFamily: { 'serif': ['"Playfair Display"', 'serif'], 'sans': ['"Lato"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-pink-soft text-gray-700 font-sans">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-heart text-rose-dell text-2xl"></i>
+                <h1 class="font-serif text-2xl font-bold text-gray-800">Artes da Dell</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm text-gray-500 hidden md:block">Olá, Cliente!</span>
+                <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-dell">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative bg-white overflow-hidden">
+        <div class="container mx-auto px-6 py-16 md:py-24 text-center">
+            <h2 class="font-serif text-4xl md:text-6xl text-gray-900 mb-4">
+                Feito à mão, com <span class="text-rose-dell">amor</span>.
+            </h2>
+            <p class="text-lg text-gray-500 mb-8 max-w-2xl mx-auto">
+                Panos de prato bordados, toalhas personalizadas e mimos para o seu lar.
+            </p>
+            <div class="max-w-md mx-auto bg-white p-2 rounded-full shadow-lg border border-rose-100 flex">
+                <input type="text" id="nomeCliente" placeholder="Digite seu nome para comprar..." class="flex-grow px-6 py-2 rounded-full focus:outline-none text-gray-700">
+                <button class="bg-rose-dell text-white px-6 py-2 rounded-full font-bold hover:bg-rose-700 transition"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="container mx-auto px-6 py-16">
+        <h3 class="font-serif text-3xl text-center mb-12 text-gray-800 relative">
+            <span class="relative z-10 bg-pink-soft px-4">Nossa Coleção</span>
+            <div class="absolute top-1/2 left-0 w-full h-px bg-rose-200 -z-0"></div>
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="vitrine"></div>
+    </section>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-white border-l-4 border-green-500 shadow-2xl p-4 rounded hidden transform transition-all duration-300 translate-y-20">
+        <div class="flex items-center">
+            <div class="text-green-500 text-2xl mr-3"><i class="fas fa-check-circle"></i></div>
+            <div>
+                <h4 class="font-bold text-gray-800">Pedido Realizado!</h4>
+                <p class="text-sm text-gray-600" id="toastMessage">Aguardando estoque...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const produtos = [
+            { id: 1, nome: "Kit Semaninha Bordado", preco: 85.90, img: "https://http2.mlstatic.com/D_NQ_NP_767590-MLB46244795907_062021-O.webp" },
+            { id: 2, nome: "Toalha de Rosto Floral", preco: 45.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYVqGvQWGyYI9Xl7QyXqgKqYqqGqYqqGqYq&s" },
+            { id: 3, nome: "Pano de Copa Galinha", preco: 22.50, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x1x1x1x1x1x1x1x1x1x1x1x1x1x1x1x1x1&s" },
+            { id: 4, nome: "Caminho de Mesa Renda", preco: 120.00, img: "https://via.placeholder.com/400x300/e11d48/ffffff?text=Caminho+Mesa" },
+            { id: 5, nome: "Jogo Americano (4un)", preco: 60.00, img: "https://via.placeholder.com/400x300/e11d48/ffffff?text=Jogo+Americano" },
+            { id: 6, nome: "Peso de Porta Coruja", preco: 35.00, img: "https://via.placeholder.com/400x300/e11d48/ffffff?text=Peso+Porta" },
+        ];
+
+        const vitrine = document.getElementById('vitrine');
+
+        produtos.forEach(p => {
+            const card = `
+                <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden group">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="${p.img}" alt="${p.nome}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute top-0 right-0 bg-rose-dell text-white px-3 py-1 m-4 rounded-full text-sm font-bold shadow-lg">
+                            R$ ${p.preco.toFixed(2).replace('.', ',')}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-serif text-xl font-bold text-gray-800 mb-2">${p.nome}</h4>
+                        <div class="flex items-center justify-between mt-4">
+                            <div class="flex items-center border border-gray-200 rounded-lg">
+                                <button onclick="alterarQtd(${p.id}, -1)" class="px-3 py-1 text-gray-600 hover:bg-gray-100">-</button>
+                                <span id="qtd-${p.id}" class="px-2 font-bold text-gray-700">1</span>
+                                <button onclick="alterarQtd(${p.id}, 1)" class="px-3 py-1 text-gray-600 hover:bg-gray-100">+</button>
+                            </div>
+                            <button onclick="comprar(${p.id}, '${p.nome}')" class="bg-rose-dell hover:bg-rose-700 text-white px-6 py-2 rounded-lg font-bold transition shadow-lg shadow-rose-200 transform active:scale-95">
+                                Comprar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            vitrine.innerHTML += card;
+        });
+
+        function alterarQtd(id, delta) {
+            const span = document.getElementById(`qtd-${id}`);
+            let qtd = parseInt(span.innerText) + delta;
+            if (qtd < 1) qtd = 1;
+            span.innerText = qtd;
+        }
+
+        async function comprar(id, nomeProduto) {
+            const nomeCliente = document.getElementById('nomeCliente').value;
+            const qtd = parseInt(document.getElementById(`qtd-${id}`).innerText);
+
+            if (!nomeCliente) {
+                alert("Por favor, digite seu nome no topo da página para comprar!");
+                document.getElementById('nomeCliente').focus();
+                return;
+            }
+
+            const pedido = { cliente: nomeCliente, produto: nomeProduto, quantidade: qtd };
+
+            try {
+                const response = await fetch('/pedidos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pedido)
+                });
+
+                if (response.ok) {
+                    mostrarToast(`Pedido de ${qtd}x ${nomeProduto} enviado!`);
+                } else {
+                    alert("Erro ao processar pedido.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Erro de conexão com o servidor.");
+            }
+        }
+
+        function mostrarToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('hidden', 'translate-y-20');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
