@@ -1,0 +1,19 @@
+# Ignora pastas de build em qualquer nível
+**/target/
+**.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Ignora configurações de IDE
+**/.idea
+**/.vscode
+**/*.iml
+**/.classpath
+**/.project
+**/.settings
+
+# Logs
+*.log
+
+# Docker (se tiver volumes locais)
+mysql_data/

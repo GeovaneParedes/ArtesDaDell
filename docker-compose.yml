@@ -1,0 +1,39 @@
+services:
+  # O Banco de Dados da Loja
+  mysql-loja:
+    image: mysql:8.0
+    container_name: artes_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: artes_dell_db
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: dell_admin
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # O Mensageiro (RabbitMQ)
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: artes_rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"   # Porta para o Java
+      - "15672:15672" # Porta para você ver o painel
+    environment:
+      RABBITMQ_DEFAULT_USER: dell_admin
+      RABBITMQ_DEFAULT_PASS: 1234
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:

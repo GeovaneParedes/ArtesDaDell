@@ -1,0 +1,17 @@
+# Define comportamento padrão: Git decide o melhor
+* text=auto
+
+# Arquivos .java sempre usam LF (padrão Linux/Universal)
+*.java text eol=lf
+
+# Scripts Shell (Linux) TEM QUE SER LF
+mvnw text eol=lf
+*.sh text eol=lf
+
+# Scripts Batch (Windows) TEM QUE SER CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Ignora binários e imagens (não tenta converter texto neles)
+*.jar binary
+*.png binary

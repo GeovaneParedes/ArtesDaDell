@@ -1,0 +1,33 @@
+name: ArtesDaDell CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Roda um job para cada serviço em paralelo
+        service: [api-vendas, worker-estoque]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Build & Verify ${{ matrix.service }}
+      # Entra na pasta, dá permissão e roda o Maven (pulando teste de conexão de banco)
+      run: |
+        cd ${{ matrix.service }}
+        chmod +x mvnw
+        ./mvnw clean package -DskipTests
+        ./mvnw spotless:check
