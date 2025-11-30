@@ -64,6 +64,30 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
+    // ... campos antigos ...
+
+    @Enumerated(EnumType.STRING)
+    private FormaPagamento formaPagamento;
+
+    private Integer parcelas; // Ex: 1 (à vista), 3 (3x), 12 (12x)
+
+    // Getters e Setters para os novos campos...
+    public FormaPagamento getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public Integer getParcelas() {
+        return parcelas;
+    }
+
+    public void setParcelas(Integer parcelas) {
+        this.parcelas = parcelas;
+    }
+
     // toString para facilitar o log no console
     @Override
     public String toString() {

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Artes da Dell | Ateliê</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'rose-dell': '#e11d48', 'pink-soft': '#fff1f2' },
+                    fontFamily: { 'serif': ['"Playfair Display"', 'serif'], 'sans': ['"Lato"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-pink-soft text-gray-700 font-sans">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-2 hover:opacity-80 transition">
+                <i class="fas fa-heart text-rose-dell text-2xl"></i>
+                <h1 class="font-serif text-2xl font-bold text-gray-800">Artes da Dell</h1>
+            </a>
+        </div>
+    </nav>
+
+    <header class="relative bg-white overflow-hidden">
+        <div class="container mx-auto px-6 py-16 text-center">
+            <h2 class="font-serif text-4xl md:text-6xl text-gray-900 mb-4">
+                Feito à mão, com <span class="text-rose-dell">amor</span>.
+            </h2>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                Panos de prato bordados, toalhas personalizadas e mimos para o seu lar.
+            </p>
+        </div>
+    </header>
+
+    <section class="container mx-auto px-6 py-12">
+        <h3 class="font-serif text-3xl text-center mb-12 text-gray-800 relative">
+            <span class="relative z-10 bg-pink-soft px-4">Nossa Coleção</span>
+            <div class="absolute top-1/2 left-0 w-full h-px bg-rose-200 -z-0"></div>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div th:each="p : ${produtos}" class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden group">
+                <div class="h-64 overflow-hidden relative">
+                    <img th:src="${p.imagemUrl}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute top-0 right-0 bg-rose-dell text-white px-3 py-1 m-4 rounded-full text-sm font-bold shadow-lg">
+                        R$ <span th:text="${#numbers.formatDecimal(p.preco, 1, 'POINT', 2, 'COMMA')}"></span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h4 class="font-serif text-xl font-bold text-gray-800 mb-2" th:text="${p.nome}">Nome</h4>
+                    <div class="mt-4">
+                        <a th:href="@{/produto/{id}(id=${p.id})}" class="block w-full bg-rose-dell hover:bg-rose-700 text-white text-center py-2 rounded-lg font-bold transition shadow-lg shadow-rose-200">
+                            Ver Detalhes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

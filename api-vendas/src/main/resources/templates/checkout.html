@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Finalizar Compra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { 'rose-dell': '#e11d48', 'pink-soft': '#fff1f2' } }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans text-gray-700">
+
+    <div class="container mx-auto px-4 py-10 max-w-5xl">
+        <div class="flex items-center gap-2 mb-8">
+            <a href="/" class="text-gray-400 hover:text-rose-600 transition"><i class="fas fa-home"></i></a>
+            <span class="text-gray-300">/</span>
+            <span class="font-bold text-gray-800">Checkout</span>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <div class="md:col-span-1 order-2 md:order-1">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 sticky top-10">
+                    <h3 class="font-bold text-gray-400 uppercase tracking-wider text-xs mb-4">Resumo do Pedido</h3>
+                    <div class="flex gap-4 mb-4">
+                        <img th:src="${p.imagemUrl}" class="w-20 h-20 object-cover rounded-lg border">
+                        <div>
+                            <h4 class="font-bold text-gray-800 leading-tight" th:text="${p.nome}">Produto</h4>
+                            <p class="text-sm text-gray-500 mt-1">Quantidade: <span id="displayQtd">1</span></p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
+                        <span class="font-bold text-gray-600">Total:</span>
+                        <span class="text-2xl font-bold text-rose-600">R$ <span id="valorTotal" th:text="${#numbers.formatDecimal(p.preco, 1, 'POINT', 2, 'COMMA')}"></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 order-1 md:order-2">
+                <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-rose-dell">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6"><i class="fas fa-wallet text-rose-dell mr-2"></i> Dados de Pagamento</h2>
+                    
+                    <form id="formCheckout" onsubmit="return false;">
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-2 text-gray-600">Seu Nome Completo</label>
+                            <input type="text" id="cliente" class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 focus:outline-none transition" placeholder="Ex: Maria Silva" required>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-2 text-gray-600">Quantidade</label>
+                            <input type="number" id="quantidade" value="1" min="1" class="w-24 px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-rose-500 focus:outline-none transition" onchange="atualizarTotal()">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-3 text-gray-600">Forma de Pagamento</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <label class="border rounded-xl p-4 cursor-pointer hover:border-rose-300 hover:bg-rose-50 has-[:checked]:border-rose-600 has-[:checked]:bg-rose-50 has-[:checked]:ring-2 has-[:checked]:ring-rose-200 transition relative flex flex-col items-center gap-2">
+                                    <input type="radio" name="pagamento" value="PIX" class="hidden" checked onchange="toggleParcelas()">
+                                    <i class="fas fa-qrcode text-2xl text-green-600"></i>
+                                    <span class="font-bold text-sm">PIX</span>
+                                </label>
+                                <label class="border rounded-xl p-4 cursor-pointer hover:border-rose-300 hover:bg-rose-50 has-[:checked]:border-rose-600 has-[:checked]:bg-rose-50 has-[:checked]:ring-2 has-[:checked]:ring-rose-200 transition relative flex flex-col items-center gap-2">
+                                    <input type="radio" name="pagamento" value="CARTAO_CREDITO" class="hidden" onchange="toggleParcelas()">
+                                    <i class="fas fa-credit-card text-2xl text-blue-600"></i>
+                                    <span class="font-bold text-sm">Cartão</span>
+                                </label>
+                                <label class="border rounded-xl p-4 cursor-pointer hover:border-rose-300 hover:bg-rose-50 has-[:checked]:border-rose-600 has-[:checked]:bg-rose-50 has-[:checked]:ring-2 has-[:checked]:ring-rose-200 transition relative flex flex-col items-center gap-2">
+                                    <input type="radio" name="pagamento" value="BOLETO" class="hidden" onchange="toggleParcelas()">
+                                    <i class="fas fa-barcode text-2xl text-gray-600"></i>
+                                    <span class="font-bold text-sm">Boleto</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="areaParcelas" class="mb-8 hidden transition-all duration-300">
+                            <label class="block text-sm font-bold mb-2 text-gray-600">Parcelamento</label>
+                            <select id="parcelas" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white focus:outline-none">
+                                <option value="1">1x sem juros</option>
+                                <option value="2">2x sem juros</option>
+                                <option value="3">3x sem juros</option>
+                            </select>
+                        </div>
+
+                        <button onclick="finalizarPedido()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition text-lg shadow-lg shadow-green-200 transform active:scale-95 flex justify-center items-center gap-2">
+                            <span>Confirmar Compra</span> <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const precoUnitario = /*[[${p.preco}]]*/ 0;
+        const produtoNome = /*[[${p.nome}]]*/ '';
+
+        function atualizarTotal() {
+            const qtd = document.getElementById('quantidade').value;
+            const total = precoUnitario * qtd;
+            document.getElementById('valorTotal').innerText = total.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            document.getElementById('displayQtd').innerText = qtd;
+        }
+
+        function toggleParcelas() {
+            const tipo = document.querySelector('input[name="pagamento"]:checked').value;
+            const area = document.getElementById('areaParcelas');
+            if (tipo === 'CARTAO_CREDITO') {
+                area.classList.remove('hidden');
+            } else {
+                area.classList.add('hidden');
+            }
+        }
+
+        async function finalizarPedido() {
+            const btn = document.querySelector('button');
+            const cliente = document.getElementById('cliente').value;
+            const qtd = document.getElementById('quantidade').value;
+            const pagamento = document.querySelector('input[name="pagamento"]:checked').value;
+            let parcelas = 1;
+
+            if (!cliente) {
+                alert("Por favor, preencha seu nome!");
+                return;
+            }
+
+            if (pagamento === 'CARTAO_CREDITO') {
+                parcelas = document.getElementById('parcelas').value;
+            }
+
+            btn.innerText = "Processando...";
+            btn.disabled = true;
+
+            const pedido = {
+                cliente: cliente,
+                produto: produtoNome,
+                quantidade: parseInt(qtd),
+                formaPagamento: pagamento,
+                parcelas: parseInt(parcelas)
+            };
+
+            try {
+                const response = await fetch('/pedidos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pedido)
+                });
+
+                if (response.ok) {
+                    alert("🎉 Pedido realizado com sucesso! Obrigado pela preferência.");
+                    window.location.href = "/";
+                } else {
+                    alert("❌ Erro ao processar pedido. Tente novamente.");
+                    btn.innerText = "Confirmar Compra";
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro de conexão.");
+                btn.innerText = "Confirmar Compra";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
