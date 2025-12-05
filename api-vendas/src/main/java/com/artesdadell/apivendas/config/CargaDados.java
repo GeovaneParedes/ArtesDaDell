@@ -14,25 +14,58 @@ public class CargaDados implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Só carrega se o banco estiver VAZIO
         if (produtoRepo.count() == 0) {
+
+            // Produto 1
             produtoRepo.save(
                     new Produto(
-                            "Kit Semaninha",
-                            "7 Panos de prato bordados com os dias da semana.",
+                            "Kit Semaninha Bordado",
+                            "7 Panos de prato bordados com os dias da semana. Algodão 100%.",
                             new BigDecimal("85.90"),
-                            "https://http2.mlstatic.com/D_NQ_NP_767590-MLB46244795907_062021-O.webp"));
+                            "/img/fa5b32d9512d4288907281d5dfa775ef.jpg")); // Caminho local
+
+            // Produto 2
             produtoRepo.save(
                     new Produto(
-                            "Toalha Floral",
-                            "Toalha de rosto com acabamento em renda guipir.",
+                            "Toalha de Rosto Floral",
+                            "Toalha aveludada com barrado em guipir e estampa floral.",
                             new BigDecimal("45.00"),
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYVqGvQWGyYI9Xl7QyXqgKqYqqGqYqqGqYq&s"));
+                            "/img/toalha-de-rosto-floral-rosa_312913_600_1.jpg"));
+
+            // Produto 3
             produtoRepo.save(
                     new Produto(
-                            "Caminho de Mesa",
-                            "2 metros, tecido linho rústico.",
+                            "Pano de Copa Galinha",
+                            "Pano de prato com estampa divertida de galinha e bico de crochê.",
+                            new BigDecimal("22.50"),
+                            "/img/62a87181809ab50319862a87181809b0.jpg"));
+
+            // Produto 4
+            produtoRepo.save(
+                    new Produto(
+                            "Caminho de Mesa Renda",
+                            "Caminho de mesa de 2 metros em linho rústico com renda.",
                             new BigDecimal("120.00"),
-                            "https://via.placeholder.com/400x300/e11d48/ffffff?text=Caminho+Mesa"));
+                            "/img/caminho-de-mesa-renda.jpeg"));
+
+            // Produto 5
+            produtoRepo.save(
+                    new Produto(
+                            "Jogo Americano (4un)",
+                            "Kit com 4 lugares americanos impermeáveis estampa geométrica.",
+                            new BigDecimal("60.00"),
+                            "/img/jogo-americano.png"));
+
+            // Produto 6
+            produtoRepo.save(
+                    new Produto(
+                            "Peso de Porta Coruja",
+                            "Peso de porta artesanal em tecido no formato de coruja.",
+                            new BigDecimal("35.00"),
+                            "/img/peso-de-porta-corujinha-peso-de-porta-coruja.jpg"));
+
+            System.out.println("✅ Carga Inicial: 6 Produtos cadastrados no banco!");
         }
     }
 }

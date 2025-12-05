@@ -64,8 +64,6 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
-    // ... campos antigos ...
-
     @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
@@ -86,6 +84,18 @@ public class Pedido implements Serializable {
 
     public void setParcelas(Integer parcelas) {
         this.parcelas = parcelas;
+    }
+
+    @Embedded // "Embutir" as colunas do endereço aqui na tabela pedidos
+    private Endereco endereco;
+
+    // Getter e Setter
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 
     // toString para facilitar o log no console
